@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-    <include file="$(find roslaunch)/resources/example.launch" />
+    <include file="$(find roslaunch)/resources/example.launch" if='true'/>
+    <include file="$(find roslaunch)/resources/example.launch" if='false'/>
 </launch>

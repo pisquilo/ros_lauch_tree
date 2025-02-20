@@ -1,26 +1,26 @@
-from typing import Dict
-
 from textual.app import App, ComposeResult
 from textual.widgets import Header, Footer, Tree
 from textual.widgets.tree import TreeNode
 
-from launch_tree import LaunchTree  # Assuming you have a class for LaunchConfig
-from anytree import Node  # Ensure anytree is installed
+from launch_tree import LaunchTree
+from anytree import Node
 
 
-# Function to convert anytree structure to textual Tree with labels
 def anytree_to_textual_tree(anytree_node: Node, textual_parent: TreeNode):
     """Recursively add nodes from anytree to a textual Tree."""
     for child in anytree_node.children:
-        label = repr(child.instance)  # Use repr(child) as the label
-        allow_expand = bool(
-            child.children
-        )  # Only allow expansion if the node has children
+        if child.ifunless:
+            color = "green"
+        elif child.ifunless == False:
+            color = "red strike"
+        else:
+            color = "white"
+        label = f"[{color}]{repr(child.instance)}[/{color}]"
 
-        textual_child = textual_parent.add(
-            label, allow_expand=allow_expand
-        )  # Add child node
-        anytree_to_textual_tree(child, textual_child)  # Recursively add children
+        allow_expand = bool(child.children)
+
+        textual_child = textual_parent.add(label, allow_expand=allow_expand)
+        anytree_to_textual_tree(child, textual_child)
 
 
 class TreeApp(App):
@@ -29,18 +29,22 @@ class TreeApp(App):
         super().__init__()
 
         self.launch_tree = tree
+        self.title = "🚀 Launch Tree Debugger"
 
     def compose(self) -> ComposeResult:
-        yield Header("Launch Tree Debugger")
+        header = Header()
+        header.styles.text_style = "bold"
+
+        yield header
         yield Footer()
         yield self.create_tree()
 
     def create_tree(self) -> Tree:
         tree = Tree(repr(self.launch_tree.root))
-        root_node = tree.root  # Get the root TreeNode
+        root_node = tree.root
 
-        anytree_to_textual_tree(self.launch_tree.root, root_node)  # Convert the tree
+        anytree_to_textual_tree(self.launch_tree.root, root_node)
 
-        tree.root.expand_all()  # Expand all nodes
+        tree.root.expand_all()
 
         return tree

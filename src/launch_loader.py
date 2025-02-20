@@ -27,10 +27,14 @@ class TreeLoader(XmlLoader):
             if_val = convert_value(if_val, "bool")
             if if_val:
                 return True
+            else:
+                return False
         elif unless_val is not None:
             unless_val = convert_value(unless_val, "bool")
             if not unless_val:
                 return True
+            else:
+                return False
 
     def _include_tag(self, tag, context, ros_config, default_machine, is_core, verbose):
         inc_filename = self.resolve_args(tag.attributes['file'].value, context)
