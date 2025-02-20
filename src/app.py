@@ -4,7 +4,7 @@ from textual.app import App, ComposeResult
 from textual.widgets import Header, Footer, Tree
 from textual.widgets.tree import TreeNode
 
-from launch_config import LaunchConfig  # Assuming you have a class for LaunchConfig
+from launch_tree import LaunchTree  # Assuming you have a class for LaunchConfig
 from anytree import Node  # Ensure anytree is installed
 
 
@@ -25,10 +25,10 @@ def anytree_to_textual_tree(anytree_node: Node, textual_parent: TreeNode):
 
 class TreeApp(App):
 
-    def __init__(self, config: LaunchConfig):
+    def __init__(self, tree: LaunchTree):
         super().__init__()
 
-        self.config = config
+        self.launch_tree = tree
 
     def compose(self) -> ComposeResult:
         yield Header("Launch Tree Debugger")
@@ -36,10 +36,10 @@ class TreeApp(App):
         yield self.create_tree()
 
     def create_tree(self) -> Tree:
-        tree = Tree(repr(self.config.root.instance))
+        tree = Tree(repr(self.launch_tree.root))
         root_node = tree.root  # Get the root TreeNode
 
-        anytree_to_textual_tree(self.config.root, root_node)  # Convert the tree
+        anytree_to_textual_tree(self.launch_tree.root, root_node)  # Convert the tree
 
         tree.root.expand_all()  # Expand all nodes
 

@@ -4,11 +4,12 @@ from rqt_launchtree.launchtree_loader import LaunchtreeLoader
 from rqt_launchtree.launchtree_config import LaunchtreeConfig
 
 from roslaunch.xmlloader import XmlLoader
-from launch_config import  LaunchConfig
+from roslaunch.config import ROSLaunchConfig
 from launch_loader import TreeLoader
 
 from app import TreeApp
 from anytree import RenderTree
+
 def main(filename):
     if not os.path.exists(filename):
         raise FileNotFoundError(filename)
@@ -17,11 +18,11 @@ def main(filename):
     # config = LaunchtreeConfig()
 
     loader = TreeLoader()
-    config = LaunchConfig()
+    config = ROSLaunchConfig()
 
     loader.load(filename, config, verbose=False)
 
-    app = TreeApp(config)
+    app = TreeApp(loader.tree)
     app.run()
 
 if __name__ == "__main__":
