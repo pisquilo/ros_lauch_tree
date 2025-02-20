@@ -1,13 +1,14 @@
 import os
+import argparse
 
 from roslaunch.config import ROSLaunchConfig
 from launch_loader import TreeLoader
-
 from app import TreeApp
+
 
 def main(filename):
     if not os.path.exists(filename):
-        raise FileNotFoundError(filename)
+        raise FileNotFoundError(f"File not found: {filename}")
 
     loader = TreeLoader()
     config = ROSLaunchConfig()
@@ -17,8 +18,17 @@ def main(filename):
     app = TreeApp(loader.tree)
     app.run()
 
+
 if __name__ == "__main__":
-    filename = os.path.join(
-        "/home/ferreira/workspace/ros_lauch_tree", "launch", "test.launch"
+    parser = argparse.ArgumentParser(description="Launch Tree Debugger")
+    parser.add_argument(
+        "filename",
+        nargs="?",
+        default=os.path.join(
+            "/home/ferreira/workspace/ros_lauch_tree", "launch", "test.launch"
+        ),
+        help="Path to the ROS launch file (default: test.launch)",
     )
-    main(filename)
+
+    args = parser.parse_args()
+    main(args.filename)

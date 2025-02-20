@@ -3,12 +3,12 @@ from roslaunch.loader import convert_value
 from roslaunch.xmlloader import XmlLoader
 
 from tree_objects import (
-    TreeNode,
-    TreeParam,
-    TreeTest,
-    TreeArg,
-    TreeRemap,
-    TreeROSParam,
+    ROSNode,
+    Param,
+    Test,
+    Arg,
+    Remap,
+    ROSParam,
 )
 from launch_tree import LaunchTree
 
@@ -50,7 +50,7 @@ class TreeLoader(XmlLoader):
 
     def _param_tag(self, tag, context, ros_config, force_local=False, verbose=True):
         param = super()._param_tag(tag, context, ros_config, force_local, verbose)
-        self.tree.add(param.key, TreeParam(param.key, param.value))
+        self.tree.add(param.key, Param(param.key, param.value))
         return param
 
     def _node_tag(
@@ -60,21 +60,21 @@ class TreeLoader(XmlLoader):
             tag, context, ros_config, default_machine, is_test, verbose
         )
         if isinstance(node, Node):
-            self.tree.add(node.name, TreeNode(node.name))
+            self.tree.add(node.name, ROSNode(node.name))
         elif isinstance(node, Test):
-            self.tree.add(node.test_name, TreeTest(node.test_name))
+            self.tree.add(node.test_name, Test(node.test_name))
         return node
 
     def _arg_tag(self, tag, context, ros_config, verbose=True):
         name = self.reqd_attrs(tag, context, ["name"])
         value = self.opt_attrs(tag, context, ["value"])
-        self.tree.add(name, TreeArg(name, value))
+        self.tree.add(name, Arg(name, value))
 
         return super()._arg_tag(tag, context, ros_config, verbose)
 
     def _remap_tag(self, tag, context, ros_config):
         from_topic, to_topic = super()._remap_tag(tag, context, ros_config)
-        self.tree.add(from_topic, TreeRemap(from_topic, to_topic))
+        self.tree.add(from_topic, Remap(from_topic, to_topic))
 
         return from_topic, to_topic
 
@@ -84,6 +84,3 @@ class TreeLoader(XmlLoader):
     def load(self, filename, ros_config, core=False, argv=None, verbose=True):
         self.tree = LaunchTree(filename)
         super().load(filename, ros_config, core, argv, verbose)
-
-    def add_rosparam(self, command, filename, unique_name):
-        self._add_to_tree(unique_name, TreeROSParam(unique_name, command))
