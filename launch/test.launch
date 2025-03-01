@@ -2,4 +2,6 @@
 <launch>
     <include file="$(find roslaunch)/resources/example.launch" if='true'/>
     <include file="$(find roslaunch)/resources/example.launch" if='false'/>
+    <rosparam command="load" file="$(env PWD)/launch/rosparam.yaml"/>
+    <rosparam param="a_list">[1, 2, 3, 4]</rosparam>
 </launch>

@@ -55,7 +55,7 @@ class TestTreeApp(unittest.TestCase):
 
     def test_create_tree(self):
         tree = self.app.create_tree()
-        self.assertEqual(str(tree.root.label), "'RootInstance'")
+        self.assertEqual(str(tree.root.label), "RootInstance")
         self.assertIsNotNone(tree.root.data)
 
     def test_on_tree_node_highlighted(self):
