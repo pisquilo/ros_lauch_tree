@@ -1,3 +1,4 @@
+import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
@@ -52,7 +53,7 @@ class ROSNode(TreeElement):
         }
         return _filter_dict(node_dict)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f":gear:  Node => {self.node.name} ({self.node.package} | {self.node.type})"
         )
@@ -63,7 +64,7 @@ class Param(TreeElement):
     key: str
     value: Any
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f":parking:  Param => {self.key}: {self.value}"
 
 
@@ -76,7 +77,7 @@ class ROSParam(TreeElement):
     subst_value: Optional[bool] = None
     body: Optional[str] = None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         text = f"  ROSParam => {self.command or self.name}: {self.file or self.body}"
 
         return "[bold white]P[/bold white]" + _escape_char_for_list(text)
@@ -102,7 +103,7 @@ class Test(TreeElement):
         }
         return _filter_dict(test_dict)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f":white_check_mark: Test => {self.name}"
 
 
@@ -111,7 +112,7 @@ class Arg(TreeElement):
     name: str
     value: str
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f":A:  Arg => {self.name}: {self.value}"
 
 
@@ -120,7 +121,7 @@ class Remap(TreeElement):
     from_topic: str
     to_topic: str
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f":left_right_arrow:  Remap  => {self.from_topic}: {self.to_topic}"
 
 
@@ -128,5 +129,16 @@ class Remap(TreeElement):
 class File(TreeElement):
     name: str
 
-    def __repr__(self):
+    @property
+    def details(self) -> str:
+        """Return the contents of the file as details, or an error message if unreadable."""
+        if os.path.isfile(self.name):  # Check if the file exists
+            try:
+                with open(self.name, "r", encoding="utf-8") as f:
+                    return f.read()  # Return file contents
+            except Exception as e:
+                return f"Error reading file: {e}"  # Handle errors gracefully
+        return "File not found."
+
+    def __repr__(self) -> str:
         return f":page_facing_up: File  => {self.name}"

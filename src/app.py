@@ -48,7 +48,6 @@ class DetailsPanel(Container):
         """Update the panel with the selected node's details."""
         instance = node.instance
 
-        test = str(node.instance)
         self.title.update(f"{node.instance} \n")
 
         details = getattr(instance, "details", {})
@@ -59,8 +58,10 @@ class DetailsPanel(Container):
                 f"| {key} | {value} |" for key, value in details.items()
             )
             formatted_table = table_header + table_rows
+        elif isinstance(details, str):
+            formatted_table = f"```\n{details}\n```"
         else:
-            formatted_table = "**Error:** Details format is invalid"
+            formatted_table = "**Error:** Unsupported details format"
 
         self.details_content.update(formatted_table)
 
