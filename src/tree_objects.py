@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
-from roslaunch.core import Node
+from roslaunch.core import Node, Test
 
 
 def filter_dict(dict: Dict[Any, Any]) -> Dict[Any, Any]:
@@ -70,7 +70,23 @@ class ROSParam(TreeElement):
 
 @dataclass
 class Test(TreeElement):
-    name: str
+    test: Test
+
+    @property
+    def details(self) -> Dict[str, Any]:
+        test_dict = {
+            "package": self.test.package,
+            "test_type": self.test.type,
+            "name": self.test.name,
+            "namespace": self.test.namespace,
+            "args": self.test.args,
+            "retry": self.test.retry,
+            "time_limit": self.test.time_limit,
+            "cwd": self.test.cwd,
+            "env_args": self.test.env_args,
+            "launch_prefix": self.test.launch_prefix,
+        }
+        return filter_dict(test_dict)
 
     def __repr__(self):
         return f":white_check_mark: Test => {self.name}"
