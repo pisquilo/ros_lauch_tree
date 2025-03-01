@@ -34,3 +34,9 @@ Run tests with:
 ```console
 venv/bin/python3 -m unittest discover tests
 ```
+
+## Related projects
+- Inspired by [rqt_launchtree](https://github.com/pschillinger/rqt_launchtree) from Philipp Schillinger.
+
+
+## [LICENSE](LICENSE)
