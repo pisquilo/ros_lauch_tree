@@ -3,6 +3,7 @@ from textual.app import App, ComposeResult
 from textual.widgets import Header, Footer, Tree, Static, Markdown
 from textual.containers import Horizontal, Container
 from textual.widgets.tree import TreeNode
+from rich.text import Text
 
 from src.tree import LaunchTree, Node
 
@@ -48,7 +49,7 @@ class DetailsPanel(Container):
         """Update the panel with the selected node's details."""
         instance = node.instance
 
-        self.title.update(f"{node.instance} \n")
+        self.title.update(Text.from_markup(f"{node.instance} \n"))
 
         details = getattr(instance, "details", {})
 
