@@ -55,7 +55,31 @@ class TestTreeLoader(unittest.TestCase):
         mock_node_tag.return_value = mock_node
 
         self.loader._node_tag(tag, {}, None, None)
-        self.loader.tree.add.assert_called_once_with("test_node", ROSNode("test_node"))
+        self.loader.tree.add.assert_called_once_with(
+            "test_node", ROSNode(mock_node, None)
+        )
+
+    @patch("src.loader.XmlLoader._node_tag")
+    def test_node_tag_if_true(self, mock_node_tag):
+        tag = parseString('<node name="test_node" if="true"/>').documentElement
+        mock_node = ROSLaunchNode("package", "executable", name="test_node")
+        mock_node_tag.return_value = mock_node
+
+        self.loader._node_tag(tag, {}, None, None)
+        self.loader.tree.add.assert_called_once_with(
+            "test_node", ROSNode(mock_node, True)
+        )
+
+    @patch("src.loader.XmlLoader._node_tag")
+    def test_node_tag_if_false(self, mock_node_tag):
+        tag = parseString('<node name="test_node" if="false"/>').documentElement
+        mock_node = ROSLaunchNode("package", "executable", name="test_node")
+        mock_node_tag.return_value = mock_node
+
+        self.loader._node_tag(tag, {}, None, None)
+        self.loader.tree.add.assert_called_once_with(
+            "test_node", ROSNode(mock_node, False)
+        )
 
     @patch("src.loader.XmlLoader._arg_tag")
     def test_arg_tag(self, mock_arg_tag):

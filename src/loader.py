@@ -59,8 +59,10 @@ class TreeLoader(XmlLoader):
         node = super()._node_tag(
             tag, context, ros_config, default_machine, is_test, verbose
         )
+        ifunless = self._ifunless_atribute(tag, context)
+
         if isinstance(node, Node):
-            self.tree.add(node.name, ROSNode(node.name))
+            self.tree.add(node.name, ROSNode(node, ifunless=ifunless))
         elif isinstance(node, Test):
             self.tree.add(node.test_name, Test(node.test_name))
         return node

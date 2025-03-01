@@ -1,6 +1,13 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Dict, Optional
+
+from roslaunch.core import Node
+
+
+def filter_dict(dict: Dict[Any, Any]) -> Dict[Any, Any]:
+    return {key: value for key, value in dict.items() if value}
+
 
 class TreeElement(ABC):
     @abstractmethod
@@ -8,16 +15,39 @@ class TreeElement(ABC):
         pass
 
     @property
-    def details(self) -> str:
-        return self.__dict__
+    def details(self) -> Dict[str, Any]:
+        return filter_dict(self.__dict__)
 
 
 @dataclass
 class ROSNode(TreeElement):
-    name: str
+    node: Node
+    ifunless: Optional[bool] = None
+
+    @property
+    def details(self) -> Dict[str, Any]:
+        node_dict = {
+            "package": self.node.package,
+            "type": self.node.type,
+            "name": self.node.name,
+            "namespace": self.node.namespace,
+            "machine_name": self.node.machine_name,
+            "args": self.node.args,
+            "respawn": self.node.respawn,
+            "output": self.node.output,
+            "cwd": self.node.cwd,
+            "env_args": self.node.env_args,
+            "remap_args": self.node.remap_args,
+            "required": self.node.required,
+            "launch_prefix": self.node.launch_prefix,
+            "if/unless": self.ifunless,
+        }
+        return filter_dict(node_dict)
 
     def __repr__(self):
-        return f":gear:  Node => {self.name}"
+        return (
+            f":gear:  Node => {self.node.name} ({self.node.package} | {self.node.type})"
+        )
 
 
 @dataclass
