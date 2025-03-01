@@ -4,7 +4,7 @@ from textual.widgets import Header, Footer, Tree, Static, Markdown
 from textual.containers import Horizontal, Container
 from textual.widgets.tree import TreeNode
 
-from src.launch_tree import LaunchTree, Node
+from src.tree import LaunchTree, Node
 
 
 # Function to convert anytree structure to textual Tree with labels
@@ -111,7 +111,4 @@ class TreeApp(App):
             return
 
         highlighted_node = event.node
-
-        self.log(f"🔍 Highlighted Node Data: {highlighted_node.data.name}")
-
         self.details_panel.show_details(highlighted_node.data)

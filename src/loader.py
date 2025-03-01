@@ -10,7 +10,7 @@ from src.tree_objects import (
     Remap,
     ROSParam,
 )
-from src.launch_tree import LaunchTree
+from src.tree import LaunchTree
 
 class TreeLoader(XmlLoader):
 

@@ -3,7 +3,7 @@ import argparse
 
 from roslaunch.config import ROSLaunchConfig
 
-from src.launch_loader import TreeLoader
+from src.loader import TreeLoader
 from src.app import TreeApp
 
 

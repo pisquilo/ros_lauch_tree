@@ -28,3 +28,9 @@ For demo, run:
 ```console
 ros_launch_tree
 ```
+
+## Developer
+Run tests with:
+```console
+venv/bin/python3 -m unittest discover tests
+```
