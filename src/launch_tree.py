@@ -21,19 +21,19 @@ class Node(AnyTreeNode):
 
     @property
     def instance(self) -> TreeElement:
-        return self._instance  # Return the private attribute
+        return self._instance
 
     @instance.setter
     def instance(self, value: TreeElement) -> None:
-        self._instance = value  # Set the private attribute
+        self._instance = value
 
     @property
     def ifunless(self) -> Optional[bool]:
-        return self._ifunless  # Return the private attribute
+        return self._ifunless
 
     @ifunless.setter
     def ifunless(self, value: Optional[bool]) -> None:
-        self._ifunless = value  # Set the private attribute
+        self._ifunless = value
 
 
 class LaunchTree:

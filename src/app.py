@@ -37,30 +37,22 @@ class DetailsPanel(Container):
     def compose(self) -> ComposeResult:
         """Create the details panel layout dynamically."""
         self.title = Static("🔍 Select a node to view details", id="details-title")
-        self.space = Static("")
         self.details_content = Markdown(
             "**Details will appear here.**", id="details-content"
         )
 
         yield self.title
-        yield self.space
         yield self.details_content
-
-    def on_mount(self) -> None:
-        """Apply styles after mounting."""
-        self.details_content.styles.overflow = "hidden"  # ✅ Prevent scrollbars
 
     def show_details(self, node: Node):
         """Update the panel with the selected node's details."""
         instance = node.instance
-        class_name = instance.__class__.__name__  # Get the class name of node.instance
 
-        # ✅ Update the title widget
-        self.title.update(f"🔍 **Class: {class_name}**  \n")
+        self.title.update(f"{repr(node.instance)} \n")
 
         details = getattr(instance, "details", {})
 
-        if isinstance(details, dict):  # Ensure it's a dictionary
+        if isinstance(details, dict):
             table_header = "| **Key** | **Value** |\n|---|---|\n"
             table_rows = "\n".join(
                 f"| {key} | {value} |" for key, value in details.items()
@@ -69,7 +61,7 @@ class DetailsPanel(Container):
         else:
             formatted_table = "**Error:** Details format is invalid"
 
-        self.details_content.update(formatted_table)  # ✅ Update Markdown table
+        self.details_content.update(formatted_table)
 
 
 class TreeApp(App):
@@ -91,9 +83,7 @@ class TreeApp(App):
                 yield self.textual_tree
 
             with Container(id="details-container"):
-                self.details_panel = (
-                    DetailsPanel()
-                )  # ✅ Fix: Use new DetailsPanel class
+                self.details_panel = DetailsPanel()
                 yield self.details_panel
 
         yield header
@@ -125,10 +115,3 @@ class TreeApp(App):
         self.log(f"🔍 Highlighted Node Data: {highlighted_node.data.name}")
 
         self.details_panel.show_details(highlighted_node.data)
-
-
-# Run the App with a sample tree (if needed)
-if __name__ == "__main__":
-    sample_root = Node("Root")  # Example AnyTree structure
-    tree = LaunchTree(sample_root)  # Assuming LaunchTree takes a root node
-    TreeApp(tree).run()
