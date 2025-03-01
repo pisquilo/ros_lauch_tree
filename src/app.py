@@ -4,7 +4,7 @@ from textual.widgets import Header, Footer, Tree, Static, Markdown
 from textual.containers import Horizontal, Container
 from textual.widgets.tree import TreeNode
 
-from launch_tree import LaunchTree, Node
+from src.launch_tree import LaunchTree, Node
 
 
 # Function to convert anytree structure to textual Tree with labels

@@ -2,7 +2,7 @@ from roslaunch.core import Node, Test
 from roslaunch.loader import convert_value
 from roslaunch.xmlloader import XmlLoader
 
-from tree_objects import (
+from src.tree_objects import (
     ROSNode,
     Param,
     Test,
@@ -10,7 +10,7 @@ from tree_objects import (
     Remap,
     ROSParam,
 )
-from launch_tree import LaunchTree
+from src.launch_tree import LaunchTree
 
 class TreeLoader(XmlLoader):
 

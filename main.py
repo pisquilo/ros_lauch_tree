@@ -2,8 +2,9 @@ import os
 import argparse
 
 from roslaunch.config import ROSLaunchConfig
-from launch_loader import TreeLoader
-from app import TreeApp
+
+from src.launch_loader import TreeLoader
+from src.app import TreeApp
 
 
 def main(filename):

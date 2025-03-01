@@ -2,8 +2,8 @@ from typing import Any, List, Optional
 
 from anytree import Node as AnyTreeNode
 
-from tree_objects import File
-from tree_objects import TreeElement
+from src.tree_objects import File
+from src.tree_objects import TreeElement
 
 
 class Node(AnyTreeNode):
