@@ -19,9 +19,9 @@ def anytree_to_textual_tree(launch_node: Node, textual_parent: TreeNode):
             color = "white"
 
         label = (
-            f"[{color}]{repr(child.instance)}[/{color}]"
+            f"[{color}]{str(child.instance)}[/{color}]"
             if hasattr(child, "instance")
-            else f"[{color}]{repr(child)}[/{color}]"
+            else f"[{color}]{str(child)}[/{color}]"
         )
 
         allow_expand = bool(child.children)
@@ -48,7 +48,8 @@ class DetailsPanel(Container):
         """Update the panel with the selected node's details."""
         instance = node.instance
 
-        self.title.update(f"{repr(node.instance)} \n")
+        test = str(node.instance)
+        self.title.update(f"{node.instance} \n")
 
         details = getattr(instance, "details", {})
 
@@ -96,7 +97,7 @@ class TreeApp(App):
 
     def create_tree(self) -> Tree:
         """Creates the textual Tree widget with the structure from anytree."""
-        tree = Tree(repr(self.any_tree.root.instance))
+        tree = Tree(str(self.any_tree.root.instance))
         tree.root.data = self.any_tree.root
 
         anytree_to_textual_tree(self.any_tree.root, tree.root)

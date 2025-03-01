@@ -85,7 +85,7 @@ class TestTreeLoader(unittest.TestCase):
     def test_arg_tag(self, mock_arg_tag):
         tag = parseString('<arg name="test_arg" value="10"/>').documentElement
         self.loader._arg_tag(tag, {}, None)
-        self.loader.tree.add.assert_called_once_with(["test_arg"], Arg(["test_arg"], ["10"]))
+        self.loader.tree.add.assert_called_once_with("test_arg", Arg("test_arg", "10"))
 
     @patch("src.loader.XmlLoader._remap_tag")
     def test_remap_tag(self, mock_remap_tag):

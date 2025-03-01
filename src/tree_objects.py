@@ -5,8 +5,16 @@ from typing import Any, Dict, Optional
 from roslaunch.core import Node, Test
 
 
-def filter_dict(dict: Dict[Any, Any]) -> Dict[Any, Any]:
+def _filter_dict(dict: Dict[Any, Any]) -> Dict[Any, Any]:
     return {key: value for key, value in dict.items() if value}
+
+
+def _escape_char_for_list(text: str) -> str:
+    replacements = {"[": r"\["}
+
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    return text
 
 
 class TreeElement(ABC):
@@ -16,7 +24,7 @@ class TreeElement(ABC):
 
     @property
     def details(self) -> Dict[str, Any]:
-        return filter_dict(self.__dict__)
+        return _filter_dict(self.__dict__)
 
 
 @dataclass
@@ -42,7 +50,7 @@ class ROSNode(TreeElement):
             "launch_prefix": self.node.launch_prefix,
             "if/unless": self.ifunless,
         }
-        return filter_dict(node_dict)
+        return _filter_dict(node_dict)
 
     def __repr__(self):
         return (
@@ -61,11 +69,17 @@ class Param(TreeElement):
 
 @dataclass
 class ROSParam(TreeElement):
-    unique_name: str
-    command: Any
+    command: str = "load"
+    name: Optional[str] = None
+    file: Optional[str] = None
+    namespace: Optional[str] = None
+    subst_value: Optional[bool] = None
+    body: Optional[str] = None
 
     def __repr__(self):
-        return f"[bold red]P[/bold red]  ROSParam => {self.unique_name}: {self.command}"
+        text = f"  ROSParam => {self.command or self.name}: {self.file or self.body}"
+
+        return "[bold white]P[/bold white]" + _escape_char_for_list(text)
 
 
 @dataclass
@@ -86,7 +100,7 @@ class Test(TreeElement):
             "env_args": self.test.env_args,
             "launch_prefix": self.test.launch_prefix,
         }
-        return filter_dict(test_dict)
+        return _filter_dict(test_dict)
 
     def __repr__(self):
         return f":white_check_mark: Test => {self.name}"

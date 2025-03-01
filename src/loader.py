@@ -1,6 +1,6 @@
 from roslaunch.core import Node, Test
 from roslaunch.loader import convert_value
-from roslaunch.xmlloader import XmlLoader
+from roslaunch.xmlloader import XmlLoader, _get_text
 
 from src.tree_objects import (
     ROSNode,
@@ -68,8 +68,8 @@ class TreeLoader(XmlLoader):
         return node
 
     def _arg_tag(self, tag, context, ros_config, verbose=True):
-        name = self.reqd_attrs(tag, context, ["name"])
-        value = self.opt_attrs(tag, context, ["value"])
+        (name,) = self.reqd_attrs(tag, context, ["name"])
+        (value,) = self.opt_attrs(tag, context, ["value"])
         self.tree.add(name, Arg(name, value))
 
         return super()._arg_tag(tag, context, ros_config, verbose)
@@ -81,6 +81,13 @@ class TreeLoader(XmlLoader):
         return from_topic, to_topic
 
     def _rosparam_tag(self, tag, context, ros_config, verbose=True):
+        command, file, name, namespace, subst_value = self.opt_attrs(
+            tag, context, ["command", "file", "param", "namespace", "subst_value"]
+        )
+        self.tree.add(
+            f"{command} {file or name}",
+            ROSParam(command, name, file, namespace, subst_value, body=_get_text(tag)),
+        )
         return super()._rosparam_tag(tag, context, ros_config, verbose)
 
     def load(self, filename, ros_config, core=False, argv=None, verbose=True):
